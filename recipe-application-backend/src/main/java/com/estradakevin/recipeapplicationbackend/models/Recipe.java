@@ -26,13 +26,13 @@ public class Recipe {
     @ElementCollection
     private List<String> ingredients;
 
-    @Lob
-    private String instructions;
+    @ElementCollection
+    private List<String> instructions;
 
     public Recipe() {
     }
 
-    public Recipe(Long recipeId, String title, String description, List<String> ingredients, String instrutions) {
+    public Recipe(Long recipeId, String title, String description, List<String> ingredients, List<String> instrutions) {
         this.recipeId = recipeId;
         this.title = title;
         this.description = description;
@@ -72,11 +72,11 @@ public class Recipe {
         this.ingredients = ingredients;
     }
 
-    public String getInstructions() {
+    public List<String> getInstructions() {
         return instructions;
     }
 
-    public void setInstructions(String instructions) {
+    public void setInstructions(List<String> instructions) {
         this.instructions = instructions;
     }
 

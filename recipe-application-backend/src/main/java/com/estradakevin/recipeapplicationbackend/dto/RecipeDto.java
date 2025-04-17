@@ -7,12 +7,13 @@ public class RecipeDto {
     private String title;
     private String description;
     private List<String> ingredients;
-    private String instructions;
+    private List<String> instructions;
 
     public RecipeDto() {
     }
 
-    public RecipeDto(Long recipeId, String title, String description, List<String> ingredients, String instructions) {
+    public RecipeDto(Long recipeId, String title, String description, List<String> ingredients,
+            List<String> instructions) {
         this.recipeId = recipeId;
         this.title = title;
         this.description = description;
@@ -52,11 +53,11 @@ public class RecipeDto {
         this.ingredients = ingredients;
     }
 
-    public String getInstructions() {
+    public List<String> getInstructions() {
         return instructions;
     }
 
-    public void setInstructions(String instructions) {
+    public void setInstructions(List<String> instructions) {
         this.instructions = instructions;
     }
 
