@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { deleteRecipe, listRecipes } from "../services/RecipeService";
+import { deleteRecipe, listRecipes } from "../../services/Recipe/RecipeService";
 import { useNavigate } from "react-router-dom";
-import Spinner from "./Spinner";
+import Spinner from "../Spinner";
 
 const ListRecipes = () => {
   const [recipes, setRecipes] = useState([]); // State to store recipes

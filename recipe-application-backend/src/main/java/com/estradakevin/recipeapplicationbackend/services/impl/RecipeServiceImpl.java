@@ -9,7 +9,9 @@ import com.estradakevin.recipeapplicationbackend.dto.RecipeDto;
 import com.estradakevin.recipeapplicationbackend.exception.ResourceNotFoundException;
 import com.estradakevin.recipeapplicationbackend.mappers.RecipeMapper;
 import com.estradakevin.recipeapplicationbackend.models.Recipe;
+import com.estradakevin.recipeapplicationbackend.models.User;
 import com.estradakevin.recipeapplicationbackend.repositories.RecipeRepository;
+import com.estradakevin.recipeapplicationbackend.repositories.UserRepository;
 import com.estradakevin.recipeapplicationbackend.services.RecipeService;
 
 @Service
@@ -17,7 +19,10 @@ public class RecipeServiceImpl implements RecipeService {
 
     private RecipeRepository recipeRepository;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository) {
+    private UserRepository userRepository;
+
+    public RecipeServiceImpl(RecipeRepository recipeRepository, UserRepository userRepository) {
+        this.userRepository = userRepository;
         this.recipeRepository = recipeRepository;
     }
 
@@ -25,6 +30,16 @@ public class RecipeServiceImpl implements RecipeService {
     public RecipeDto createRecipe(RecipeDto recipeDto) {
         Recipe recipe = RecipeMapper.mapToRecipe(recipeDto);
         Recipe savedRecipe = recipeRepository.save(recipe);
+        if (recipeDto.getUserId() == null) {
+            System.out.println("User ID is null, setting default user ID to null");
+        } else {
+            User user = userRepository.findById(recipeDto.getUserId())
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException(
+                                    "User not found with id: " + recipeDto.getUserId()));
+            recipe.setUser(user);
+        }
+        recipeRepository.save(recipe);
         return RecipeMapper.mapToRecipeDto(savedRecipe);
     }
 
@@ -45,6 +60,9 @@ public class RecipeServiceImpl implements RecipeService {
     public RecipeDto updateRecipe(Long recipeId, RecipeDto recipeDto) {
         Recipe recipe = recipeRepository.findById(recipeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Recipe not found with id: " + recipeId));
+        User user = userRepository.findById(recipeDto.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + recipeDto.getUserId()));
+        recipe.setUser(user);
         recipe.setTitle(recipeDto.getTitle());
         recipe.setDescription(recipeDto.getDescription());
         recipe.setIngredients(recipeDto.getIngredients());

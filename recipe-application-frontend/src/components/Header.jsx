@@ -7,6 +7,12 @@ const HeaderComponent = () => {
         <Link to="/recipes" className="navbar-brand">
           Recipe System
         </Link>
+        <Link to="/recipes" className="navbar-brand">
+          Recipes
+        </Link>
+        <Link to="/users" className="navbar-brand">
+          Users
+        </Link>
       </nav>
     </header>
   );

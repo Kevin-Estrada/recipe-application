@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
-import { addRecipe, getRecipe, updateRecipe } from "../services/RecipeService";
+import {
+  addRecipe,
+  getRecipe,
+  updateRecipe,
+} from "../../services/Recipe/RecipeService";
+import { listUsers, getUser } from "../../services/User/UserService";
 import { useNavigate, useParams } from "react-router-dom";
-import Spinner from "./Spinner";
+import Spinner from "../Spinner";
 
 const Recipe = () => {
   // State variables for form fields and errors
@@ -12,6 +17,19 @@ const Recipe = () => {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false); // State for loading
   const [error, setError] = useState(""); // State for error messages
+  const [userId, setUserId] = useState("");
+  const [userNames, setUserName] = useState([]);
+
+  useEffect(() => {
+    listUsers()
+      .then((response) => {
+        console.log("Response from listUsers:", response.data); // Log the response data
+        setUserName(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching users: ", error);
+      });
+  }, []);
 
   const { recipeId } = useParams();
 
@@ -22,13 +40,26 @@ const Recipe = () => {
       getRecipe(recipeId)
         .then((response) => {
           const recipe = response.data;
+          console.log("Response from getRecipe:", recipe); // Log the response data
+
+          // Set recipe details in the state
           setTitle(recipe.title);
           setDescription(recipe.description);
           setIngredients(recipe.ingredients);
           setInstructions(recipe.instructions);
+
+          // Fetch and set the user details
+          setUserId(recipe.userId); // Set the userId for the dropdown
+          getUser(recipe.userId)
+            .then((userResponse) => {
+              console.log("Response from getUser:", userResponse.data); // Log the user data
+            })
+            .catch((error) => {
+              console.error("Error fetching user: ", error);
+            });
         })
         .catch((error) => {
-          console.error("Error fetching data: ", error);
+          console.error("Error fetching recipe: ", error);
         });
     }
   }, [recipeId]);
@@ -78,6 +109,7 @@ const Recipe = () => {
       instructions: instructions.some((instruction) => instruction)
         ? ""
         : "At least 1 instruction is required",
+      user: userId ? "" : "User is required",
     };
     setErrors(newErrors);
 
@@ -94,6 +126,7 @@ const Recipe = () => {
         description,
         ingredients: filteredIngredients,
         instructions: filteredInstructions,
+        userId,
       };
       setLoading(true); // Set loading to true
       setError(""); // Reset error message
@@ -284,6 +317,31 @@ const Recipe = () => {
               {errors.instructions && (
                 <div className="text-danger">{errors.instructions}</div>
               )}
+            </div>
+          </div>
+
+          <div className="card mb-4">
+            <div className="card-header">
+              <h5>Select User</h5>
+            </div>
+            <div className="card-body">
+              <div className="form-group">
+                <select
+                  className="form-control"
+                  value={userId}
+                  onChange={(e) => setUserId(e.target.value)}
+                >
+                  <option value="Select User">Select User</option>
+                  {userNames.map((user) => (
+                    <option key={user.userId} value={user.userId}>
+                      {user.userName}
+                    </option>
+                  ))}
+                </select>
+                {errors.user && (
+                  <div className="text-danger">{errors.user}</div>
+                )}
+              </div>
             </div>
           </div>
 

@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// const RECIPE_API_BASE_URL = "http://localhost:8080/api/recipes";
-const RECIPE_API_BASE_URL = "http://192.168.1.30:8080/api/recipes";
+const RECIPE_API_BASE_URL = "http://localhost:8080/api/recipes";
+// const RECIPE_API_BASE_URL = "http://192.168.1.30:8080/api/recipes";
 
 export const listRecipes = async () => {
   const response = await axios.get(RECIPE_API_BASE_URL);

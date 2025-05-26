@@ -8,17 +8,19 @@ public class RecipeDto {
     private String description;
     private List<String> ingredients;
     private List<String> instructions;
+    private Long userId;
 
     public RecipeDto() {
     }
 
     public RecipeDto(Long recipeId, String title, String description, List<String> ingredients,
-            List<String> instructions) {
+            List<String> instructions, Long userId) {
         this.recipeId = recipeId;
         this.title = title;
         this.description = description;
         this.ingredients = ingredients;
         this.instructions = instructions;
+        this.userId = userId;
     }
 
     public Long getRecipeId() {
@@ -59,6 +61,14 @@ public class RecipeDto {
 
     public void setInstructions(List<String> instructions) {
         this.instructions = instructions;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     @Override
